@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: activity-service
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/fitness_activity
+      database: fitness_activity
+  jackson:
+    time-zone: Asia/Ho_Chi_Minh
+server:
+  port: 8082
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
