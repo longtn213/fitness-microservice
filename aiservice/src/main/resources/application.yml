@@ -1,23 +1,24 @@
 spring:
   application:
-    name: activity-service
+    name: ai-service
   data:
     mongodb:
-      uri: mongodb://localhost:27017/fitness_activity
-      database: fitness_activity
-  jackson:
-    time-zone: Asia/Ho_Chi_Minh
+      uri: mongodb://localhost:27017/fitness-recommendation
+      database: fitness-recommendation
   rabbitmq:
     host: localhost
     port: 5672
     username: guest
     password: guest
-server:
-  port: 8082
 eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+server:
+  port: 8083
+
 rabbitmq:
   exchange:
     name: fitness.exchange
@@ -25,3 +26,8 @@ rabbitmq:
     name: activity.queue
   routing:
     key: activity.tracking
+
+gemini:
+  api:
+    url: ${GEMINI_API_URL}
+    key: ${GEMINI_API_KEY}
