@@ -1,21 +1,5 @@
-server:
-  port: 8081
 spring:
   application:
     name: user-service
-  datasource:
-    url: jdbc:postgresql://localhost:5433/fitness-user-db?currentSchema=public
-    username: postgres
-    password: 12345
-  jpa:
-    hibernate:
-      ddl-auto: none
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
-  instance:
-    prefer-ip-address: true
+  config:
+    import: optional:configserver:http://localhost:8888

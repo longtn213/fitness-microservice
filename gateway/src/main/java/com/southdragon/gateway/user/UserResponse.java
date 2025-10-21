@@ -1,4 +1,4 @@
-package com.southdragon.userservice.dto;
+package com.southdragon.gateway.user;
 
 import lombok.Builder;
 import lombok.Data;
