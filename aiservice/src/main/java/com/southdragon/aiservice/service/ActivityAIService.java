@@ -63,8 +63,8 @@ public class ActivityAIService {
                     "description",
                     "No specific suggestions provided");
             List<String> safety = extractSimpleList(
-                    analysisJson.path("safety"),
-                    "Follow general safety guidelines");
+                    analysisJson.path("safety")
+            );
 
             return Recommendation.builder()
                     .activityId(activity.getId())
@@ -115,16 +115,16 @@ public class ActivityAIService {
         return result.isEmpty() ? Collections.singletonList(defaultMsg) : result;
     }
 
-    private List<String> extractSimpleList(JsonNode arrayNode, String defaultMsg) {
+    private List<String> extractSimpleList(JsonNode arrayNode) {
         if (arrayNode == null || !arrayNode.isArray()) {
-            return Collections.singletonList(defaultMsg);
+            return Collections.singletonList("Follow general safety guidelines");
         }
         List<String> list = new ArrayList<>();
         arrayNode.forEach(item -> {
             String text = item.asText("");
             if (!text.isEmpty()) list.add(text);
         });
-        return list.isEmpty() ? Collections.singletonList(defaultMsg) : list;
+        return list.isEmpty() ? Collections.singletonList("Follow general safety guidelines") : list;
     }
 
     private void addAnalysisSection(StringBuilder fullAnalysis, JsonNode analysisNode, String key, String prefix) {
@@ -134,48 +134,93 @@ public class ActivityAIService {
                     .append("\n\n");
         }
     }
-
     private String createPromptForActivity(Activity activity) {
         return String.format("""
-        Analyze this fitness activity and provide detailed recommendations in the following EXACT JSON format:
-        {
-          "analysis": {
-            "overall": "Overall analysis here",
-            "pace": "Pace analysis here",
-            "heartRate": "Heart rate analysis here",
-            "caloriesBurned": "Calories analysis here"
-          },
-          "improvements": [
-            {
-              "area": "Area name",
-              "recommendation": "Detailed recommendation"
-            }
-          ],
-          "suggestions": [
-            {
-              "workout": "Workout name",
-              "description": "Detailed workout description"
-            }
-          ],
-          "safety": [
-            "Safety point 1",
-            "Safety point 2"
-          ]
-        }
+    Phân tích hoạt động thể chất sau đây và trả về kết quả dưới dạng JSON theo ĐÚNG cấu trúc mẫu dưới đây:
 
-        Analyze this activity:
-        Activity Type: %s
-        Duration: %d minutes
-        Calories Burned: %d
-        Additional Metrics: %s
-        
-        Provide detailed analysis focusing on performance, improvements, next workout suggestions, and safety guidelines.
-        Ensure the response follows the EXACT JSON format shown above.
-        """,
+    {
+      "analysis": {
+        "overall": "Phân tích tổng quan về buổi tập",
+        "pace": "Phân tích về tốc độ, nhịp độ luyện tập",
+        "heartRate": "Phân tích về nhịp tim",
+        "caloriesBurned": "Phân tích về năng lượng tiêu hao (calo)"
+      },
+      "improvements": [
+        {
+          "area": "Khu vực hoặc kỹ năng cần cải thiện",
+          "recommendation": "Gợi ý chi tiết giúp cải thiện hiệu suất"
+        }
+      ],
+      "suggestions": [
+        {
+          "workout": "Tên bài tập được khuyến nghị",
+          "description": "Mô tả chi tiết cách thực hiện hoặc lý do nên tập bài này"
+        }
+      ],
+      "safety": [
+        "Gợi ý an toàn 1",
+        "Gợi ý an toàn 2"
+      ]
+    }
+
+    Phân tích hoạt động:
+    • Loại hoạt động: %s
+    • Thời lượng: %d phút
+    • Lượng calo tiêu hao: %d
+    • Thông tin bổ sung: %s
+
+    Hãy trả về nội dung hoàn toàn bằng **tiếng Việt**,
+    tập trung vào việc đánh giá hiệu suất, đề xuất cải thiện, gợi ý bài tập tiếp theo và hướng dẫn an toàn.
+    Không thêm bất kỳ ký tự nào ngoài JSON.
+    """,
                 activity.getType(),
                 activity.getDuration(),
                 activity.getCaloriesBurned(),
                 activity.getAdditionalMetrics()
         );
     }
+
+//    private String createPromptForActivity(Activity activity) {
+//        return String.format("""
+//        Analyze this fitness activity and provide detailed recommendations in the following EXACT JSON format:
+//        {
+//          "analysis": {
+//            "overall": "Overall analysis here",
+//            "pace": "Pace analysis here",
+//            "heartRate": "Heart rate analysis here",
+//            "caloriesBurned": "Calories analysis here"
+//          },
+//          "improvements": [
+//            {
+//              "area": "Area name",
+//              "recommendation": "Detailed recommendation"
+//            }
+//          ],
+//          "suggestions": [
+//            {
+//              "workout": "Workout name",
+//              "description": "Detailed workout description"
+//            }
+//          ],
+//          "safety": [
+//            "Safety point 1",
+//            "Safety point 2"
+//          ]
+//        }
+//
+//        Analyze this activity:
+//        Activity Type: %s
+//        Duration: %d minutes
+//        Calories Burned: %d
+//        Additional Metrics: %s
+//
+//        Provide detailed analysis focusing on performance, improvements, next workout suggestions, and safety guidelines.
+//        Ensure the response follows the EXACT JSON format shown above.
+//        """,
+//                activity.getType(),
+//                activity.getDuration(),
+//                activity.getCaloriesBurned(),
+//                activity.getAdditionalMetrics()
+//        );
+//    }
 }
