@@ -28,4 +28,6 @@ rabbitmq:
 gemini:
   api:
     url: ${GEMINI_API_URL}
-    key: ${GEMINI_API_KEY}
+    key: ${GOOGLE_API_KEY}
+  model:
+    name: gemini-2.5-flash
